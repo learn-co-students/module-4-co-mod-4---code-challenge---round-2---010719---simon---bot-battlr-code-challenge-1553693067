@@ -42,6 +42,13 @@ class BotsPage extends React.Component {
     this.setState({ army: this.state.army.filter(bots => bots !== botObj) });
   };
 
+  sortName = () => {
+    let sortedName = [...this.state.bots].sort((a, b) =>
+      a.name > b.name ? 1 : -1
+    );
+    this.setState({ bots: sortedName });
+  };
+
   render() {
     if (this.state.containerclicked) {
       return (
@@ -64,6 +71,7 @@ class BotsPage extends React.Component {
             bots={this.state.army}
             handleClick={this.handleRemoveBotFromArmy}
           />
+          <button onClick={this.sortName}>Sort name</button>
           <BotCollection
             bots={this.state.bots}
             handleClick={this.handleShowBotSpecs}
