@@ -1,13 +1,16 @@
 import React from "react";
 import BotCollection from "./BotCollection";
 import YourBotArmy from "./YourBotArmy";
+import BotSpecs from "../components/BotSpecs";
 
 class BotsPage extends React.Component {
   //start here with your code for step one
 
   state = {
     bots: [],
-    army: []
+    army: [],
+    containerclicked: false,
+    selectedBot: {}
   };
 
   componentDidMount() {
@@ -16,12 +19,23 @@ class BotsPage extends React.Component {
       .then(bots => this.setState({ bots: bots }));
   }
 
+  handleShowBotSpecs = botObj => {
+    this.setState({ containerclicked: true, selectedBot: botObj });
+  };
+
   handleAddBotToArmy = botObj => {
     if (this.state.army.includes(botObj)) {
-      alert("no");
+      alert("wrong!");
     } else {
-      this.setState({ army: [...this.state.army, botObj] });
+      this.setState({
+        army: [...this.state.army, botObj],
+        containerclicked: false
+      });
     }
+  };
+
+  handleGoBack = () => {
+    this.setState({ containerclicked: false });
   };
 
   handleRemoveBotFromArmy = botObj => {
@@ -29,19 +43,34 @@ class BotsPage extends React.Component {
   };
 
   render() {
-    console.log("army", this.state.army);
-    return (
-      <div>
-        <YourBotArmy
-          bots={this.state.army}
-          handleClick={this.handleRemoveBotFromArmy}
-        />
-        <BotCollection
-          bots={this.state.bots}
-          handleClick={this.handleAddBotToArmy}
-        />
-      </div>
-    );
+    if (this.state.containerclicked) {
+      return (
+        <div>
+          <YourBotArmy
+            bots={this.state.army}
+            handleClick={this.handleRemoveBotFromArmy}
+          />
+          <BotSpecs
+            bot={this.state.selectedBot}
+            handleClick={this.handleAddBotToArmy}
+            handleGoBack={this.handleGoBack}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <YourBotArmy
+            bots={this.state.army}
+            handleClick={this.handleRemoveBotFromArmy}
+          />
+          <BotCollection
+            bots={this.state.bots}
+            handleClick={this.handleShowBotSpecs}
+          />
+        </div>
+      );
+    }
   }
 }
 
